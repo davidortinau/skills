@@ -39,7 +39,7 @@ Tests live at:
 tests/<plugin>/<skill-name>/eval.yaml
 ```
 
-Verify the skill exists at `plugins/<plugin>/skills/<skill-name>/SKILL.md`. Read the skill content to understand what it teaches — this is critical for writing non-overfitted rubric items.
+Verify the skill exists at `plugins/<plugin>/skills/<skill-name>/SKILL.md`. Read the skill content to understand what it teaches -- this is critical for writing non-overfitted rubric items.
 
 ### Step 2: Create the test directory and eval.yaml
 
@@ -47,7 +47,7 @@ Create the directory and file:
 
 ```
 tests/<plugin>/<skill-name>/
-└── eval.yaml
++-- eval.yaml
 ```
 
 ### Step 3: Write scenarios
@@ -143,7 +143,7 @@ Assertions are hard pass/fail checks. Use them for objective, binary-verifiable 
 | `file_not_exists` | `path` | No file matching glob exists |
 | `file_contains` | `path`, `value` | File at glob path contains text |
 | `file_not_contains` | `path`, `value` | File at glob path does NOT contain text |
-| `exit_success` | — | Agent produced non-empty output |
+| `exit_success` | -- | Agent produced non-empty output |
 
 #### Assertion guidelines
 
@@ -169,11 +169,11 @@ The overfitting judge classifies each rubric item:
 
 #### Rubric writing rules
 
-1. **Test outcomes, not methods.** Write "Identified the root cause of the build failure" — not "Replayed the binlog using `dotnet build /flp`."
+1. **Test outcomes, not methods.** Write "Identified the root cause of the build failure" -- not "Replayed the binlog using `dotnet build /flp`."
 2. **Allow alternative approaches.** If multiple valid solutions exist, the rubric item should accept any of them.
 3. **Never reference the skill by name** or use phrasing copied directly from the SKILL.md.
 4. **Don't test pre-existing LLM knowledge.** If the LLM already knows something (common APIs, standard syntax, basic escaping), testing for it adds no signal.
-5. **Test findings, not diagnostic steps.** Write "Correctly determined that the root cause is a missing PackageReference" — not "Used `dotnet restore` to check package resolution."
+5. **Test findings, not diagnostic steps.** Write "Correctly determined that the root cause is a missing PackageReference" -- not "Used `dotnet restore` to check package resolution."
 6. **Each item should be independently evaluable.** Avoid compound items that test multiple things.
 
 #### Examples
@@ -203,19 +203,19 @@ max_turns: 10                    # Maximum agent iterations
 max_tokens: 5000                 # Maximum token budget
 ```
 
-Use constraints sparingly — only when the scenario specifically requires or forbids certain agent behaviors.
+Use constraints sparingly -- only when the scenario specifically requires or forbids certain agent behaviors.
 
 ### Step 8: Add non-activation scenarios with `expect_activation: false`
 
-Many skills have clear boundaries — situations where the skill should recognize it does not apply and decline gracefully. Test these boundaries using `expect_activation: false`.
+Many skills have clear boundaries -- situations where the skill should recognize it does not apply and decline gracefully. Test these boundaries using `expect_activation: false`.
 
 #### How `expect_activation: false` works
 
 When a scenario has `expect_activation: false`:
 
 1. **All three runs still execute** (baseline, skilled-isolated, skilled-plugin) and assertions are evaluated on each. The flag does not change which runs are performed.
-2. **Activation verdict is inverted** — if the skill is not activated for this prompt, the evaluator reports it as `ℹ️ not activated (expected)` instead of treating it as a failure.
-3. **The scenario is excluded from the noise test** — the multi-skill activation test only runs positive (`expect_activation: true`) scenarios.
+2. **Activation verdict is inverted** -- if the skill is not activated for this prompt, the evaluator reports it as `[Info] not activated (expected)` instead of treating it as a failure.
+3. **The scenario is excluded from the noise test** -- the multi-skill activation test only runs positive (`expect_activation: true`) scenarios.
 
 #### When to use non-activation scenarios
 
@@ -226,7 +226,7 @@ Add `expect_activation: false` scenarios when the skill has explicit "When Not t
 | **Wrong input format** | Skill handles Android tombstones; scenario provides an iOS crash log |
 | **Out-of-scope request** | Skill collects dumps; scenario asks to *analyze* a dump |
 | **Incompatible project type** | Skill converts PackageReference to CPM; scenario has packages.config |
-| **Wrong framework version** | Skill migrates .NET 8→9; scenario provides a .NET 8 app and asks for .NET 10 migration |
+| **Wrong framework version** | Skill migrates .NET 8 to 9; scenario provides a .NET 8 app and asks for .NET 10 migration |
 | **Prerequisite not met** | Skill requires a specific file format that isn't present |
 
 #### Example: Wrong input format
@@ -288,9 +288,9 @@ Add `expect_activation: false` scenarios when the skill has explicit "When Not t
 
 Non-activation rubric items typically verify three things:
 
-1. **Recognition** — The agent identified *why* the skill doesn't apply.
-2. **Restraint** — The agent did NOT attempt the skill's workflow (no file modifications, no tool installs).
-3. **Redirection** — The agent suggested the correct alternative approach or next step.
+1. **Recognition** -- The agent identified *why* the skill doesn't apply.
+2. **Restraint** -- The agent did NOT attempt the skill's workflow (no file modifications, no tool installs).
+3. **Redirection** -- The agent suggested the correct alternative approach or next step.
 
 ### Step 9: Validate the eval.yaml
 
@@ -314,7 +314,7 @@ dotnet run --project eng/skill-validator/src/SkillValidator.csproj -- evaluate \
 ```yaml
 scenarios:
   - name: "<Describe what the agent should accomplish>"
-    prompt: "<Natural developer request — do not mention the skill>"
+    prompt: "<Natural developer request -- do not mention the skill>"
     setup:
       copy_test_files: true
     assertions:
